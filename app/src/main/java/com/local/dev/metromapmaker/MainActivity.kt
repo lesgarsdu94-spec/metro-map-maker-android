@@ -12,65 +12,45 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.pointerInput
 
-// New Data Structure representing an actual transit station
+// v0.0.2 Requirement: Custom Data Structure for Stations
 data class MetroStation(
     val id: Int,
     val coordinate: Offset,
-    val name: String
+    val name: String // Holds the auto-generated name
 )
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // Holds structured station objects instead of raw coordinates
+            // State-driven array holding our structured data objects
             val metroStations = remember { mutableStateListOf<MetroStation>() }
 
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFF111111)) // Upgraded to a sleek dark mode theme
+                    .background(Color(0xFFF5F5F5)) // Light canvas matching baseline
                     .pointerInput(Unit) {
                         detectTapGestures { offset ->
+                            // v0.0.2 Requirement: Auto-naming engine logic
                             val nextId = metroStations.size + 1
                             val newStation = MetroStation(
                                 id = nextId,
                                 coordinate = offset,
-                                name = "Station $nextId"
+                                name = "Station $nextId" // Automatically names them sequentially
                             )
                             metroStations.add(newStation)
                         }
                     }
             ) {
-                // 1. Draw the Metro Lines connecting the stations sequentially
-                if (metroStations.size > 1) {
-                    for (i in 0 until metroStations.size - 1) {
-                        drawLine(
-                            color = Color(0xFF00BCD4), // Vibrant transit cyan line
-                            start = metroStations[i].coordinate,
-                            end = metroStations[i + 1].coordinate,
-                            strokeWidth = 8f,
-                            cap = StrokeCap.Round
-                        )
-                    }
-                }
-
-                // 2. Draw the physical Station Nodes on top of the lines
+                // Renders the stations from the data structure
                 metroStations.forEach { station ->
                     drawCircle(
-                        color = Color.White,
-                        radius = 14f,
+                        color = Color.Black,
+                        radius = 16f,
                         center = station.coordinate
-                    )
-                    // Outer accent ring for visual polish
-                    drawCircle(
-                        color = Color(0xFF00BCD4),
-                        radius = 20f,
-                        center = station.coordinate,
-                        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 4f)
                     )
                 }
             }
