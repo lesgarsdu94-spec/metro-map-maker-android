@@ -18,25 +18,25 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // Memory array that tracks the (X, Y) coordinates of every tap on your device screen
+            // A dynamic list that keeps track of the coordinates of every tap on the screen
             val stationPositions = remember { mutableStateListOf<Offset>() }
 
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFFF5F5F5)) // Light grey background canvas
+                    .background(Color(0xFFF5F5F5)) // A light grey canvas background
                     .pointerInput(Unit) {
-                        // Detects fingers touching the screen directly
+                        // Listens directly for touch inputs on the physical screen
                         detectTapGestures { offset ->
                             stationPositions.add(offset)
                         }
                     }
             ) {
-                // Loops through every recorded touch point and draws a station dot
+                // Loops through the recorded touch points and draws a solid circle at each coordinate
                 stationPositions.forEach { position ->
                     drawCircle(
                         color = Color.Black,
-                        radius = 16f, // Size of the metro station dot
+                        radius = 16f, // Visual size of your metro station dot
                         center = position
                     )
                 }
