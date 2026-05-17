@@ -14,43 +14,27 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 
-// v0.0.2 Requirement: Custom Data Structure for Stations
-data class MetroStation(
-    val id: Int,
-    val coordinate: Offset,
-    val name: String // Holds the auto-generated name
-)
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // State-driven array holding our structured data objects
-            val metroStations = remember { mutableStateListOf<MetroStation>() }
+            val stationPositions = remember { mutableStateListOf<Offset>() }
 
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFFF5F5F5)) // Light canvas matching baseline
+                    .background(Color(0xFFF5F5F5))
                     .pointerInput(Unit) {
                         detectTapGestures { offset ->
-                            // v0.0.2 Requirement: Auto-naming engine logic
-                            val nextId = metroStations.size + 1
-                            val newStation = MetroStation(
-                                id = nextId,
-                                coordinate = offset,
-                                name = "Station $nextId" // Automatically names them sequentially
-                            )
-                            metroStations.add(newStation)
+                            stationPositions.add(offset)
                         }
                     }
             ) {
-                // Renders the stations from the data structure
-                metroStations.forEach { station ->
+                stationPositions.forEach { position ->
                     drawCircle(
                         color = Color.Black,
                         radius = 16f,
-                        center = station.coordinate
+                        center = position
                     )
                 }
             }
